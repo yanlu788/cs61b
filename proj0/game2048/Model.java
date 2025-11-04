@@ -107,18 +107,76 @@ public class Model extends Observable {
      *    and the trailing tile does not.
      * */
     public boolean tilt(Side side) {
-        boolean changed;
-        changed = false;
+        boolean changed = false;
+        board.setViewingPerspective(side);
 
-        // TODO: Modify this.board (and perhaps this.score) to account
-        // for the tilt to the Side SIDE. If the board changed, set the
-        // changed local variable to true.
+        // 对每个列单独处理
+        for (int col = 0; col < board.size(); col++) {
+            // 记录这一列是否发生了变化
+            boolean columnChanged = processColumn(col);
+            changed = changed || columnChanged;
+        }
 
+        board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
+    }
+
+    private boolean processColumn(int col) {
+        boolean changed = false;
+
+        // 创建一个数组来记录这一列的Tile状态
+        // merged数组用于标记哪些位置已经合并过
+        boolean[] merged = new boolean[board.size()];
+
+        // 从最远离移动方向的位置开始处理（对于NORTH方向，从底部开始）
+        for (int row = board.size() - 1; row >= 0; row--) {
+            Tile current = board.tile(col, row);
+            if (current == null) continue;
+
+            // 寻找这个Tile能移动到的目标位置
+            int targetRow = findTargetRow(col, row, merged);
+
+            if (targetRow != row) {
+                // 执行移动
+                boolean wasMerged = board.move(col, targetRow, current);
+                if (wasMerged) {
+                    // 标记这个位置已经合并过
+                    merged[targetRow] = true;
+                    score += current.value() * 2;
+                }
+                changed = true;
+            }
+        }
+
+        return changed;
+    }
+
+    private int findTargetRow(int col, int startRow, boolean[] merged) {
+        Tile current = board.tile(col, startRow);
+        int targetRow = startRow;
+
+        // 向移动方向寻找目标位置
+        for (int row = startRow + 1; row < board.size(); row++) {
+            Tile targetTile = board.tile(col, row);
+
+            if (targetTile == null) {
+                // 空位置，可以移动到这里
+                targetRow = row;
+            } else if (targetTile.value() == current.value() && !merged[row]) {
+                // 相同值且目标位置没有被合并过，可以合并
+                targetRow = row;
+                break;
+            } else {
+                // 不同值或者目标位置已经合并过，停止移动
+                break;
+            }
+        }
+
+        return targetRow;
     }
 
     /** Checks if the game is over and sets the gameOver variable
@@ -137,7 +195,12 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+        for(int i=0;i<4;i++){
+            for(int j=0;j<4;j++){
+                if(b.tile(i,j)==null)
+                    return true;
+            }
+        }
         return false;
     }
 
@@ -147,7 +210,12 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        for(int i=0;i<4;i++){
+            for(int j=0;j<4;j++){
+                if(b.tile(i,j)!=null&&b.tile(i,j).value()==MAX_PIECE)
+                    return true;
+            }
+        }
         return false;
     }
 
@@ -158,7 +226,24 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        for(int i=0;i<4;i++){
+            for(int j=0;j<4;j++){
+                if(b.tile(i,j)==null)
+                    return true;
+            }
+        }
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                if(b.tile(i,j).value()==b.tile(i+1,j).value()||b.tile(i,j).value()==b.tile(i,j+1).value())
+                    return true;
+            }
+        }
+        for(int i=3,j=0;j<3;j++)
+            if(b.tile(i,j).value()==b.tile(i,j+1).value())
+                return true;
+        for(int i=0,j=3;i<3;i++)
+            if(b.tile(i,j).value()==b.tile(i+1,j).value())
+                return true;
         return false;
     }
 
