@@ -121,6 +121,36 @@ public class LinkedListDequeTest {
         }
 
     }
+
+    @Test
+    public void equalsMethodTest(){
+        LinkedListDeque<Integer> x=new LinkedListDeque<>();
+        LinkedListDeque<Integer> y=new LinkedListDeque<>();
+        x.addFirst(4);
+        x.addFirst(3);
+        x.addFirst(5);
+        y.addFirst(3);
+        y.addLast(4);
+        y.addFirst(5);
+        assertTrue(x.equals(y));
+    }
+
+    @Test
+    public void iteratorTest(){
+        LinkedListDeque<Integer> x=new LinkedListDeque<>();
+        x.addFirst(4);
+        x.addFirst(3);
+        x.addFirst(5);
+//        Iterator<Integer> seer=x.iterator();
+//        while(seer.hasNext()){
+//            int z=seer.next();
+//            System.out.println(z);
+//        }
+        for(int i:x){
+            System.out.println(i);
+        }
+
+    }
 }
 
 

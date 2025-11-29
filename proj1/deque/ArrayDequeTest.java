@@ -1,6 +1,9 @@
 package deque;
 
 import org.junit.Test;
+
+import java.util.Iterator;
+
 import static org.junit.Assert.*;
 
 
@@ -118,6 +121,36 @@ public class ArrayDequeTest {
 
         for (double i = 999999; i > 500000; i--) {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
+        }
+
+    }
+
+    @Test
+    public void equalsMethodTest(){
+        ArrayDeque<Integer> x=new ArrayDeque<>();
+        ArrayDeque<Integer> y=new ArrayDeque<>();
+        x.addFirst(4);
+        x.addFirst(3);
+        x.addFirst(5);
+        y.addFirst(3);
+        y.addLast(4);
+        y.addFirst(5);
+        assertTrue(x.equals(y));
+    }
+
+    @Test
+    public void iteratorTest(){
+        ArrayDeque<Integer> x=new ArrayDeque<>();
+        x.addFirst(4);
+        x.addFirst(3);
+        x.addFirst(5);
+//        Iterator<Integer> seer=x.iterator();
+//        while(seer.hasNext()){
+//            int z=seer.next();
+//            System.out.println(z);
+//        }
+        for(int i:x){
+            System.out.println(i);
         }
 
     }
