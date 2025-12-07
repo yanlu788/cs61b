@@ -128,13 +128,13 @@ public class ArrayDequeTest {
     @Test
     public void equalsMethodTest(){
         ArrayDeque<Integer> x=new ArrayDeque<>();
-        ArrayDeque<Integer> y=new ArrayDeque<>();
+        ArrayDeque<String> y=new ArrayDeque<>();
         x.addFirst(4);
         x.addFirst(3);
         x.addFirst(5);
-        y.addFirst(3);
-        y.addLast(4);
-        y.addFirst(5);
+        y.addFirst("a");
+        y.addLast("b");
+        y.addFirst("c");
         assertTrue(x.equals(y));
     }
 

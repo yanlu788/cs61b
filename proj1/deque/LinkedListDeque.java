@@ -1,6 +1,7 @@
 package deque;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
 
@@ -32,16 +33,18 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o instanceof LinkedListDeque) {
-            LinkedListDeque<T> other = (LinkedListDeque<T>) o;
-            for (int i = 0; i < size; i++) {
-                T x = this.get(i);
-                T y = other.get(i);
-                if (x != y) return false;
-            }
-            return true;
+        if (!(o instanceof LinkedListDeque)) return false;
+
+        LinkedListDeque<?> other = (LinkedListDeque<?>) o;  // 通配符
+        if (this.size != other.size) return false;
+
+        for (int i = 0; i < size; i++) {
+            // 现在需要Object类型，因为不知道other的具体泛型
+            Object x = this.get(i);
+            Object y = other.get(i);
+            if (!Objects.equals(x, y)) return false;
         }
-        return false;
+        return true;
     }
 
     public class IntNode {

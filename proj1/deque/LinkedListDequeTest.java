@@ -125,13 +125,13 @@ public class LinkedListDequeTest {
     @Test
     public void equalsMethodTest(){
         LinkedListDeque<Integer> x=new LinkedListDeque<>();
-        LinkedListDeque<Integer> y=new LinkedListDeque<>();
+        LinkedListDeque<String> y=new LinkedListDeque<>();
         x.addFirst(4);
         x.addFirst(3);
         x.addFirst(5);
-        y.addFirst(3);
-        y.addLast(4);
-        y.addFirst(5);
+        y.addFirst("a");
+        y.addLast("b");
+        y.addFirst("c");
         assertTrue(x.equals(y));
     }
 
